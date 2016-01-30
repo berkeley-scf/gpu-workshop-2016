@@ -1,7 +1,5 @@
 # gpu-workshop-2016
-Materials for workshop on GPU computation for statistics, data science, machine learning applications. 
-
-Materials will be posted the week of January 25, 2016. They will be similar to those here: https://github.com/berkeley-scf/gpu-workshop-2014.
+Materials for workshop on GPU computation for statistics, data science, machine learning applications. Please see gpu.html to be guided through the materials.
 
 Session 1: Monday, Feb. 1, 4:10 - 5:30 pm in Evans 1011
 * Introduction to GPU resources that are available (Savio, Amazon EC2)
