@@ -1,10 +1,10 @@
 # start BCE-2015-fall from AWS console on a g2.2xlarge
 # $0.65/hour; 4 Gb video RAM, 1536 CUDA cores
 
-# make sure to increase space for home directory by requesting more when start instance
+# make sure to increase space for home directory by requesting more when start instance, e.g. 30 Gb
 
 # set variable holding IP address
-# export ip=52-24-118-6
+# export ip=54-69-106-127
 
 # ssh to the Amazon instance
 # ssh -i ~/.ssh/ec2_rsa ubuntu@ec2-${ip}.us-west-2.compute.amazonaws.com
