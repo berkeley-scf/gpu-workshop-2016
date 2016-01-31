@@ -854,6 +854,7 @@ For this example, here are the speeds, and the speed relative to the eight-core 
 | shared memory |  1.5   |  4.0   |
 | shared memory + floats |  0.6   | 10.7    |
 
+Interestingly on Savio, the C++ time was 9.8, while the shared memory time was 0.67 and the shared memory + floats time was 0.31. 
 
 # 8) Final Comments
 

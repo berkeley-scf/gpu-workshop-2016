@@ -4,7 +4,7 @@
 # make sure to increase space for home directory by requesting more when start instance, e.g. 30 Gb
 
 # set variable holding IP address
-# export ip=54-69-106-127
+# export ip=52-32-169-154
 
 # ssh to the Amazon instance
 # ssh -i ~/.ssh/ec2_rsa ubuntu@ec2-${ip}.us-west-2.compute.amazonaws.com
@@ -37,8 +37,6 @@ ldconfig
 
 exit # back to ubuntu user
 
-source ~/.bashrc
-
 # reboot the instance
 
 gtop
@@ -56,6 +54,8 @@ deviceQuery
 pip install pycuda
 
 # install RCUDA
+sudo su
+
 cd /tmp
 git clone https://github.com/duncantl/RCUDA
 git clone https://github.com/omegahat/RAutoGenRunTime
@@ -67,10 +67,47 @@ ln -s ../../RAutoGenRunTime/inst/include/RError.h .
 
 cd ../..
 
+Rscript -e "install.packages('bitops', repos = 'https://cran.cnr.berkeley.edu')"
+
 R CMD build RCUDA
 R CMD build RAutoGenRunTime
 R CMD INSTALL RAutoGenRunTime_0.3-0.tar.gz 
 R CMD INSTALL RCUDA_0.4-0.tar.gz 
+
+# install MAGMA
+export PATH=${PATH}:/usr/local/cuda/bin
+
+MAGMA_VERSION=1.7.0
+cd /usr/local
+mkdir magma-${MAGMA_VERSION}
+ln -s magma-${MAGMA_VERSION} magma
+cd /usr/src
+mkdir magma-${MAGMA_VERSION}
+ln -s magma-${MAGMA_VERSION} magma
+cd magma
+wget http://icl.cs.utk.edu/projectsfiles/magma/downloads/magma-${MAGMA_VERSION}.tar.gz
+tar -xvzf magma-${MAGMA_VERSION}.tar.gz
+cd magma-${MAGMA_VERSION}
+# note I added -fPIC per the magma README to enable creation of a shared object
+cp make.inc.openblas make.inc
+sed -i 's/-lopenblas/-llapack -lblas -lstdc++ -lm -lgfortran/' make.inc
+sed -i 's/#GPU_TARGET.*/GPU_TARGET = Kepler/' make.inc
+sed -i 's/.*(CUDADIR)\/lib64/LIBDIR\t\= -L$(CUDADIR)\/lib64/' make.inc
+sed -i 's/.*OPENBLASDIR.*//' make.inc
+sed -i 's/.*make.check-openblas.*//' make.inc
+# make NVCCFLAGS look like:
+# NVCCFLAGS = -O3         -DADD_       -Xcompiler "-fno-strict-aliasing $(FPIC)"
+
+export CUDADIR=/usr/local/cuda
+make shared 2>&1 | tee ../make.shared.log
+make test 2>&1 | tee ../make.test.log
+make install prefix=/usr/local/magma 2>&1 | tee ../make.install.log
+
+cd /usr/local/magma
+chmod ugo+r include/*
+
+echo "/usr/local/magma/lib" >> /etc/ld.so.conf.d/SITE-magma.conf
+ldconfig
 
 
 #### Create image ##########################
