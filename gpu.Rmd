@@ -536,7 +536,6 @@ The idea here is to use software that hides the details of the kernel implementa
 
 We'll start with very high-level use of the GPU by simply calling linear algebra routines that use the GPU. 
 
-[timing compared to what]
 
 ### 6.1) Using C to Call CUDABLAS and MAGMA
 

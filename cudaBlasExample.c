@@ -8,7 +8,7 @@
 
 // compile as:
 // export PATH=$PATH:/usr/local/cuda/bin
-// nvcc cudaExample.C -I/usr/local/cuda/include -lcublas -o cudaExample
+// nvcc cudaBlasExample.c -I/usr/local/cuda/include -lcublas -o cudaBlasExample
 
 
 double read_timer() {
