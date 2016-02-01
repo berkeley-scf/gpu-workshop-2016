@@ -95,7 +95,7 @@ int main( int argc, char **argv ) {
 
     // matrix multiply
     magmablas_dgemm(MagmaNoTrans, MagmaTrans, size, size, size, one, dB, size, dB, size, zero, dA, size );
-    // magma_dgemm is apparently synonymous with magmablas_dgemm
+    // magma_dgemm may be more general in terms of being able to call GPU or MIC
 
     cudaDeviceSynchronize();
     double tMatMult = read_timer();

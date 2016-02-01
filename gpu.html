@@ -722,8 +722,6 @@ Calculation time (CPU):  7.292
 
 <p>We&#39;ll start with very high-level use of the GPU by simply calling linear algebra routines that use the GPU. </p>
 
-<p>[timing compared to what]</p>
-
 <h3>6.1) Using C to Call CUDABLAS and MAGMA</h3>
 
 <p>We can do linear algebra (and basic vectorized operations with vectors and matrices) using GPU implementations of BLAS/LAPACK type routines. Both CUDA (through CUDABLAS) and MAGMA provide access to BLAS functionality, but only MAGMA provides LAPACK-like functionality (i.e., matrix factorizations/decompositions). </p>
@@ -874,7 +872,7 @@ GPU array calc time: 0.007769s
 CPU calc time: 0.071532s
 </code></pre>
 
-<p>So we see some good speedups. However, there is some compilation that gets done when the code is run the first time that slows done the initial calculation. Also, again, the transfer of data to the GPU takes a chunk of time. </p>
+<p>So we see some good speedups. However, there is some compilation that gets done when the code is run the first time that slows down the initial calculation. Also, again, the transfer of data to the GPU takes a chunk of time. </p>
 
 <h3>6.3) Using R packages to do vectorized operations and linear algebra on the GPU</h3>
 

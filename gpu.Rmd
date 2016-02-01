@@ -690,7 +690,7 @@ GPU array calc time: 0.007769s
 CPU calc time: 0.071532s
 ```
 
-So we see some good speedups. However, there is some compilation that gets done when the code is run the first time that slows done the initial calculation. Also, again, the transfer of data to the GPU takes a chunk of time. 
+So we see some good speedups. However, there is some compilation that gets done when the code is run the first time that slows down the initial calculation. Also, again, the transfer of data to the GPU takes a chunk of time. 
 
 ### 6.3) Using R packages to do vectorized operations and linear algebra on the GPU
 
