@@ -872,7 +872,9 @@ GPU array calc time: 0.007769s
 CPU calc time: 0.071532s
 </code></pre>
 
-<p>So we see some good speedups. However, there is some compilation that gets done when the code is run the first time that slows down the initial calculation. Also, again, the transfer of data to the GPU takes a chunk of time. </p>
+<p>So we see a good speedup for the vectorized exponentiation. However, there is some compilation that gets done when the code is run the first time that slows down the initial calculation. Also, again, the transfer of data to the GPU takes a chunk of time. </p>
+
+<p>For the dot product, the speedup is not as impressive, probably because the aggregation that is needed to do the sum involves coordination across threads. </p>
 
 <h3>6.3) Using R packages to do vectorized operations and linear algebra on the GPU</h3>
 
@@ -887,7 +889,7 @@ CPU calc time: 0.071532s
 <li>gputools</li>
 </ul>
 
-<h1>7) An extended example to explore optimizing our GPU code</h1>
+<h1>7) An extended example of optimizing GPU kernel code</h1>
 
 <p>Here we&#39;ll implement a basic, but real computation that is a component of a larger collaboration I am engaged in. The basic context is understanding spatial variation in the species composition of forests in the eastern United States. The data are multinomial samples of counts of trees of different species at many different spatial locations.  We fit a spatial version of a multicategory probit regression model. </p>
 
