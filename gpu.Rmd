@@ -1,10 +1,10 @@
 Introduction to Computing with GPUs for Data Science
 ==================================================================
-Chris Paciorek, Statistical Computing Facility, Department of Statistics, UC Berkeley
+Chris Paciorek, Statistical Computing Facility, Department of Statistics and Berkeley Research Computing, UC Berkeley
 
 Presented: February 1 and 8, 2016
 
-Last Revised: January 29, 2016
+Last Revised: February 1, 2016
 
 
 ```{r setup, include=FALSE}
