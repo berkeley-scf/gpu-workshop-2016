@@ -13,7 +13,7 @@ opts_chunk$set(cache = TRUE) # because the compilation takes time, let's cache i
 
 # 0) This Tutorial
 
-Materials for this tutorial, including the R markdown file that was used to create this document are available on github at [https://github.com/berkeley-scf/git-workshop-2016](https://github.com/berkeley-scf/git-workshop-2016).  You can download the files by doing a git clone:
+Materials for this tutorial, including the R markdown file that was used to create this document are available on github at [https://github.com/berkeley-scf/git-workshop-2016](https://github.com/berkeley-scf/gpu-workshop-2016).  You can download the files by doing a git clone:
 ```{r clone, eval=FALSE, engine='bash'}
 git clone https://github.com/berkeley-scf/gpu-workshop-2016
 ```
@@ -120,7 +120,7 @@ module load cuda
 
 ### 2.3) GPUs through Amazon's EC2 service
 
-The *g2.2xlarge* Amazon EC2 instance types have a GPU with 1536 cores and 4 Gb memory, along with 8 CPU cores. There is also a *g2.8xlarge* that has four GPUs and 32 CPU cores. They can be pretty expensive unless you use spot instances - currently 65 cents per hour for g2.2xlarge and $2.60 per hour for g2.8xlarge in the us-west-2 region.
+The *g2.2xlarge* Amazon EC2 instance types have a GPU with 1536 cores and 4 Gb memory, along with 8 CPU cores. There is also a *g2.8xlarge* that has four GPUs and 32 CPU cores. They can be pretty expensive unless you use spot instances - currently 65 cents per hour for g2.2xlarge and $2.60 per hour for g2.8xlarge in the us-west-2 region. The g2.2xlarge GPUs are pretty old chips, and I found that some of the examples included here ran a lot slower on the EC2 instance than on the Statistics GPU (and likely than Savio, but I haven't checked that as much).
 
 I've created an Amazon machine image (an AMI) that is the binary representation of the Linux Ubuntu operating system with support for GPU calculations. The AMI is based off of the [BCE virtual machine](bce.berkeley.edu) in use for a variety of projects and classes on campus. BCE provides a common set of software used in various data analysis/data science focused contexts, including Python and R. The BCE GPU AMI inherits this software and adds on various GPU-related software (in particular CUDA). Note also that the AMI is also similar to the  SCF and EML Linux machines but with a reduced set of software.
 
