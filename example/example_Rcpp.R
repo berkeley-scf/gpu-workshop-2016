@@ -23,6 +23,8 @@ cppFunction('
       for(k = 0; k < K; ++k){
          probs(i,k) = 0.0;
       }
+
+      // core computation
       for(m = 0; m < M; ++m){
         for(k = 0; k < K; ++k){
           w(k) = alpha(i, k) + rands(m, k);
@@ -37,6 +39,7 @@ cppFunction('
         }
         probs(i,maxind) += 1.0;
       }
+
       for(k = 0; k < K; ++k) {
         probs(i,k) /= M;
       }
