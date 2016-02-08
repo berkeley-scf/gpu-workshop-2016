@@ -983,7 +983,7 @@ The C++ version takes about 47 seconds in serial and 6 seconds with eight cores.
 <p>Let&#39;s transpose the matrices sent to the GPU memory and access adjacent rows, i.e., strides of one, across contiguous threads, as shown in <a href="https://rawgit.com/berkeley-scf/gpu-workshop-2016/master/example/compute_probs_unitStrides.cu">compute_probs_unitStrides.cu</a>.</p>
 
 <pre><code class="bash">echo &quot;unitStrides &lt;- TRUE&quot; &gt; /tmp/tmp.R
-echo example/example_RCUDA.R &gt;&gt; /tmp/tmp.R
+cat example/example_RCUDA.R &gt;&gt; /tmp/tmp.R
 R CMD BATCH --no-save /tmp/tmp.R
 </code></pre>
 
@@ -1004,7 +1004,7 @@ R CMD BATCH --no-save /tmp/tmp.R
 
 <pre><code class="bash">echo &quot;unitStrides &lt;- TRUE&quot; &gt; /tmp/tmp.R
 echo &quot;sharedMem &lt;- TRUE&quot; &gt;&gt; /tmp/tmp.R
-echo example/example_RCUDA.R &gt;&gt; /tmp/tmp.R
+cat example/example_RCUDA.R &gt;&gt; /tmp/tmp.R
 R CMD BATCH --no-save /tmp/tmp.R
 </code></pre>
 
@@ -1021,14 +1021,14 @@ R CMD BATCH --no-save /tmp/tmp.R
 <p>Here  I get a roughly two- to three-fold speedup using floats rather than doubles, both for the original version of the code with non-unit strides and without shared memory (first example below) and for the optimized version of the code (second example below). As shown in the various &ldquo;_float&rdquo; kernel files, all I need to do is change &ldquo;double&rdquo; to &ldquo;float&rdquo;. And when calling from R, there are some housekeeping items shown in <a href="https://rawgit.com/berkeley-scf/gpu-workshop-2016/master/example/example_RCUDA.R">example_RCUDA.R</a>.</p>
 
 <pre><code class="bash">echo &quot;float &lt;- TRUE&quot; &gt; /tmp/tmp.R
-echo example/example_RCUDA.R &gt;&gt; /tmp/tmp.R
+cat example/example_RCUDA.R &gt;&gt; /tmp/tmp.R
 R CMD BATCH --no-save tmp.R 
 </code></pre>
 
 <pre><code class="bash">echo &quot;float &lt;- TRUE&quot; &gt; /tmp/tmp.R
 echo &quot;unitStrides &lt;- TRUE&quot; &gt; /tmp/tmp.R
 echo &quot;sharedMem &lt;- TRUE&quot; &gt;&gt; /tmp/tmp.R
-echo example/example_RCUDA.R &gt;&gt; /tmp/tmp.R
+cat example/example_RCUDA.R &gt;&gt; /tmp/tmp.R
 R CMD BATCH --no-save tmp.R 
 </code></pre>
 

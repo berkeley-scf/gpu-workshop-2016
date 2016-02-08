@@ -791,7 +791,7 @@ Let's transpose the matrices sent to the GPU memory and access adjacent rows, i.
 
 ```{r example-unitStrides, eval=FALSE, engine='bash'}
 echo "unitStrides <- TRUE" > /tmp/tmp.R
-echo example/example_RCUDA.R >> /tmp/tmp.R
+cat example/example_RCUDA.R >> /tmp/tmp.R
 R CMD BATCH --no-save /tmp/tmp.R
 ```
 
@@ -811,7 +811,7 @@ Here we notice that *w* and *probs* are accessed in device memory multiple times
 ```{r example-sharedMem, eval=FALSE, engine='bash'}
 echo "unitStrides <- TRUE" > /tmp/tmp.R
 echo "sharedMem <- TRUE" >> /tmp/tmp.R
-echo example/example_RCUDA.R >> /tmp/tmp.R
+cat example/example_RCUDA.R >> /tmp/tmp.R
 R CMD BATCH --no-save /tmp/tmp.R
 ```
 
@@ -830,7 +830,7 @@ Here  I get a roughly two- to three-fold speedup using floats rather than double
 
 ```{r example-basic-float, eval=FALSE, engine='bash'}
 echo "float <- TRUE" > /tmp/tmp.R
-echo example/example_RCUDA.R >> /tmp/tmp.R
+cat example/example_RCUDA.R >> /tmp/tmp.R
 R CMD BATCH --no-save tmp.R 
 ```
 
@@ -838,7 +838,7 @@ R CMD BATCH --no-save tmp.R
 echo "float <- TRUE" > /tmp/tmp.R
 echo "unitStrides <- TRUE" > /tmp/tmp.R
 echo "sharedMem <- TRUE" >> /tmp/tmp.R
-echo example/example_RCUDA.R >> /tmp/tmp.R
+cat example/example_RCUDA.R >> /tmp/tmp.R
 R CMD BATCH --no-save tmp.R 
 ```
 
