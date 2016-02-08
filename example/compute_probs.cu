@@ -13,6 +13,8 @@ __global__ void compute_probs(double* alphas, double* rands, double* probs, int 
       for(k = 0; k < K; ++k){   // initialize probs (though already done on CPU)
          probs[i*K + k] = 0.0;
       }
+
+      // core computations
       for(m = 0; m < M; ++m){   // loop over Monte Carlo iterations
         for(k = 0; k < K; ++k){  // generate W ~ N(alpha, 1)
           w[k] = alphas[i*K + k] + rands[m*K + k];
@@ -29,6 +31,7 @@ __global__ void compute_probs(double* alphas, double* rands, double* probs, int 
         }
         probs[i*K + maxind] += 1.0;
       }
+
       // compute final proportions
       for(k = 0; k < K; ++k) {
         probs[i*K + k] /= M_d;

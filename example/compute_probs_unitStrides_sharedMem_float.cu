@@ -21,6 +21,7 @@ __global__ void compute_probs(float* alphas, float* rands, float* probs, int n, 
         probs_shared[k*threads_per_block + threadIdx.x] = 0.0;
       }
 
+      // core computations
       for(m = 0; m < M; ++m){     // loop over Monte Carlo iterations 
         for(k = 0; k < K; ++k){   // generate W ~ N(alpha, 1)
           w[k*threads_per_block + threadIdx.x] = alphas[k*n + i] + rands[k*M + m];
@@ -35,6 +36,7 @@ __global__ void compute_probs(float* alphas, float* rands, float* probs, int n, 
         }
         probs_shared[maxind*threads_per_block + threadIdx.x] += 1.0;
       }
+
       for(k = 0; k < K; ++k) {
         probs_shared[k*threads_per_block + threadIdx.x] /= M_d;
       }

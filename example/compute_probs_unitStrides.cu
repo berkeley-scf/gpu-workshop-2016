@@ -13,6 +13,8 @@ __global__ void compute_probs(double* alphas, double* rands, double* probs, int 
       for(k = 0; k < K; ++k){  // initialize probs (though already done on CPU)
          probs[k*n + i] = 0.0;
       }
+
+      // core computations
       for(m = 0; m < M; ++m){    // loop over Monte Carlo iterations
         for(k = 0; k < K; ++k){  // generate W ~ N(alpha, 1)
           // with +i we now have unit strides in inner loop
@@ -30,6 +32,7 @@ __global__ void compute_probs(double* alphas, double* rands, double* probs, int 
         }
         probs[maxind*n + i] += 1.0;
       }
+
       // compute final proportions
       for(k = 0; k < K; ++k) {
         // unit strides

@@ -785,7 +785,7 @@ This takes 12.1 seconds.
 
 Access to the device memory is slow (memory latency), but GPUs are good at switching between different threads while data is being retrieved from memory. Also, the GPU can access memory from consecutive locations efficiently and *coalesce* (combine) the memory accesses of groups of threads in a warp. Finally, threads in a warp execute in lock-step. The implications of this is that we want the threads in a warp to retrieve contiguous values from the device memory.  This means using a 'stride' of one when incrementing through a vector (analogous to moving along rows in a row-major matrix).
 
-In the original code, I was striding through alpha, rands, and probs in strides of *k*. Thinking of the various matrices as having $K$ rows and being column-major, I was accessing values from adjacent columns on contigous threads when I should have accessed values from adjacent rows.
+In the original code, I was striding through *alphas* and *probs* in strides of *k*. Thinking of the various matrices as having $K$ rows and being column-major, I was accessing values from adjacent columns on contigous threads when I should have accessed values from adjacent rows.
 
 Let's transpose the matrices sent to the GPU memory and access adjacent rows, i.e., strides of one, across contiguous threads, as shown in [compute_probs_unitStrides.cu](https://rawgit.com/berkeley-scf/gpu-workshop-2016/master/example/compute_probs_unitStrides.cu).
 
