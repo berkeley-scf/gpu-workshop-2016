@@ -947,7 +947,7 @@ W_k \sim N(X\beta_k, 1)
 
 <h3>7.2) R and C baseline implementations</h3>
 
-<p>In <a href="https://rawgit.com/berkeley-scf/gpu-workshop-2016/master/example/example_pureR.R">example_pureR.R</a> and <a href="https://rawgit.com/berkeley-scf/gpu-workshop-2016/master/example/example_Rcpp.R">example_Rcpp.R</a> I&#39;ve implemented the calculation for \(M=26280\), \(K=21\), and \(n=10000\). I tried to write efficient vectorized R code and efficient C++ code (called from R, for convenience). I&#39;ve also implemented parallel versions for both R and C++.</p>
+<p>In <a href="https://rawgit.com/berkeley-scf/gpu-workshop-2016/master/example/example_pureR.R">example_pureR.R</a> and <a href="https://rawgit.com/berkeley-scf/gpu-workshop-2016/master/example/example_Rcpp.R">example_Rcpp.R</a> I&#39;ve implemented the calculation for \(n=26280\), \(K=21\), and \(M=10000\). I tried to write efficient vectorized R code and efficient C++ code (called from R, for convenience). I&#39;ve also implemented parallel versions for both R and C++.</p>
 
 <p>The pure R version takes about 570 seconds in serial and 140 seconds with eight cores.
 The C++ version takes about 47 seconds in serial and 6 seconds with eight cores.</p>
