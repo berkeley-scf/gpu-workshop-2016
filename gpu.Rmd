@@ -875,8 +875,6 @@ Interestingly on Savio, the C++ time was 9.8, while the shared memory time was 0
 
 So for some tasks and likely involving additional coding effort, you may see speedups of 100-200 fold compared to a single CPU core. 
 
-[assess speedup of my various tests]
-
 Finally, rather than bringing a large chunk of data back to the CPU, you might do a reduction/aggregation operation (e.g., summing over values) in GPU memory. To do this, here's a [presentation](http://will-landau.com/gpu/lectures/cudac-atomics/cudac-atomics.pdf)‎ that has some useful information. 
 
 ### 8.2) A Comment on Compilation

@@ -18,21 +18,21 @@ cppFunction('
       double max;    
       int m, k;
       int maxind;
-      NumericVector rvVals(K);
+      NumericVector w(K);
 
       for(k = 0; k < K; ++k){
          probs(i,k) = 0.0;
       }
       for(m = 0; m < M; ++m){
         for(k = 0; k < K; ++k){
-          rvVals(k) = alpha(i, k) + rands(m, k);
+          w(k) = alpha(i, k) + rands(m, k);
         }
         maxind = K-1;
-        max = rvVals(K-1);
+        max = w(K-1);
         for(k = 0; k < (K-1); ++k){
-          if(rvVals(k) > max){
+          if(w(k) > max){
             maxind = k;
-            max = rvVals(k);
+            max = w(k);
           } 
         }
         probs(i,maxind) += 1.0;
@@ -76,21 +76,21 @@ cppFunction('
       double max;    
       int k, m;
       int maxind;
-      NumericVector rvVals(K);
+      NumericVector w(K);
 
       for(k = 0; k < K; ++k){
          probs(k,i) = 0.0;
       }
       for(m = 0; m < M; ++m){
         for(k = 0; k < K; ++k){
-          rvVals(k) = alpha(k,i) + rands(k, m);
+          w(k) = alpha(k,i) + rands(k, m);
         }
         maxind = K-1;
-        max = rvVals(K-1);
+        max = w(K-1);
         for(k = 0; k < (K-1); ++k){
-          if(rvVals(k) > max){
+          if(w(k) > max){
             maxind = k;
-            max = rvVals(k);
+            max = w(k);
           } 
         }
         probs(maxind, i) += 1.0;
