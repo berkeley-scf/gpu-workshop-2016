@@ -1003,7 +1003,7 @@ R CMD BATCH --no-save /tmp/tmp.R
 <p>Here we notice that <em>w</em> and <em>probs</em> are accessed in device memory multiple times, and furthermore, <em>probs</em> is not even needed as an input, so let&#39;s try to manage these values in shared memory, as shown in <a href="https://rawgit.com/berkeley-scf/gpu-workshop-2016/master/example/compute_probs_unitStrides_sharedMem.cu">compute_probs_unitStrides_sharedMem.cu</a>. </p>
 
 <pre><code class="bash">echo &quot;unitStrides &lt;- TRUE&quot; &gt; /tmp/tmp.R
-echo &quot;sharedMem &lt;- TRUE&quot; &gt; /tmp/tmp.R
+echo &quot;sharedMem &lt;- TRUE&quot; &gt;&gt; /tmp/tmp.R
 echo &quot;example/example_RCUDA.R&quot; &gt;&gt; /tmp/tmp.R
 R CMD BATCH --no-save /tmp/tmp.R
 </code></pre>
@@ -1027,7 +1027,7 @@ R CMD BATCH --no-save tmp.R
 
 <pre><code class="bash">echo &quot;float &lt;- TRUE&quot; &gt; /tmp/tmp.R
 echo &quot;unitStrides &lt;- TRUE&quot; &gt; /tmp/tmp.R
-echo &quot;sharedMem &lt;- TRUE&quot; &gt; /tmp/tmp.R
+echo &quot;sharedMem &lt;- TRUE&quot; &gt;&gt; /tmp/tmp.R
 echo &quot;example/example_RCUDA.R&quot; &gt;&gt; /tmp/tmp.R
 R CMD BATCH --no-save tmp.R 
 </code></pre>
