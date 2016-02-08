@@ -706,7 +706,7 @@ Some packages you might investigate include:
 
 # 7) An extended example of optimizing GPU kernel code
 
-Here we'll implement a basic, but real computation that is a component of a larger collaboration I am engaged in. The basic context is understanding spatial variation in the species composition of forests in the eastern United States. The data are multinomial samples of counts of trees of different species at many different spatial locations.  We fit a spatial version of a multicategory probit regression model. 
+Here we'll implement a basic, but real computation that is a component of a larger collaboration I am engaged in. The basic context is understanding spatial variation in the species composition of forests in the eastern United States. The data are multinomial samples of counts of trees of different species at many different spatial locations (i.e., observations).  We fit a spatial version of a multicategory probit regression model. 
 
 In our coding, I'll compare a basic R implementation as well as a C++ implementation with various GPU implementations designed to improve the speed of the GPU calculation. I'll use R to manage the C++ and CUDA code (via *Rcpp* and *RCUDA*) but there's no reason one couldn't do this via Python or C/C++ on the front-end. Our main focus will be on the different CUDA implementations.
 
@@ -750,9 +750,9 @@ Now to compute $p = ({P(Y=1), P(Y=2), \ldots, P(Y=K)})$ we can again do Monte Ca
 
 The proportion of times the category corresponded to the largest $W_k$ is an estimate of the multinomial proportions of interest.
 
-For our example, we want to do this computation for large $M$ (to reduce Monte Carlo error) and for many spatial locations with different $X$ values. In our code, we will assume that we are given a vector ($\alpha_i = {\{X_i\beta_k\}}_{k=1,\ldots,K}$) for each location, $i$, resulting in an $n$ by $K$ matrix.
+For our example, we want to do this computation for large $M$ (to reduce Monte Carlo error) and for many observations with different $X$ values. In our code, we will assume that we are given a vector ($\alpha_i = {\{X_i\beta_k\}}_{k=1,\ldots,K}$) for each observation, $i$, resulting in an $n$ by $K$ matrix.
 
-Finally, note that I can reuse the random numbers I need across the $n$ locations (in fact, this probably reducesMonte Carlo error in certain ways), so I just need an $M$ by $K$ matrix of standard normal random variables. Even for large $M$ this is not so big, and I'll simply generate the values once on the CPU. 
+Finally, note that I can reuse the random numbers I need across the $n$ observations (in fact, this probably reducesMonte Carlo error in certain ways), so I just need an $M$ by $K$ matrix of standard normal random variables. Even for large $M$ this is not so big, and I'll simply generate the values once on the CPU. 
 
 ### 7.2) R and C baseline implementations
 
@@ -769,8 +769,8 @@ In [compute_probs.cu](https://rawgit.com/berkeley-scf/gpu-workshop-2016/master/e
 
 Some features of my code:
  - It's generally recommended to have 128-256 threads per block, with the number a multiple of 32 (because threads operate in lock-step in 'warps' of 32 threads). So I'm using 192 threads per block.
- -  I then determine the number of blocks (of 192 threads each) that I need so I can have one thread for each of my $M$ locations.
- - For this algorithm, as mentioned, I can reuse the random numbers across locations, so I don't generate individually on the GPU.
+ -  I then determine the number of blocks (of 192 threads each) that I need so I can have one thread for each of my $n$ observations.
+ - For this algorithm, as mentioned, I can reuse the random numbers across observations, so I don't generate individually on the GPU.
  - I haven't thought about locality of memory access (i.e., strides, row-major vs. column-major) in this version of the code.
 
 Let's execute this:
@@ -783,7 +783,7 @@ This takes 12.1 seconds.
 
 ### 7.4) Accessing memory efficiently
 
-Access to the device memory is slow (memory latency), but GPUs are good at switching between different threads while data is being retrieved from memory. Also, the GPU can access memory from consecutive locations efficiently and *coalesce* (combine) the memory accesses of groups of threads in a warp. Finally, threads in a warp execute in lock-step. The implications of this is that we want the threads in a warp to retrieve contiguous values from the device memory.  This means using a 'stride' of one when incrementing through a vector (analogous to moving along rows in a row-major matrix).
+Access to the device memory is slow (memory latency), but GPUs are good at switching between different threads while data is being retrieved from memory. Also, the GPU can access memory from consecutive memory locations efficiently and *coalesce* (combine) the memory accesses of groups of threads in a warp. Finally, threads in a warp execute in lock-step. The implications of this is that we want the threads in a warp to retrieve contiguous values from the device memory.  This means using a 'stride' of one when incrementing through a vector (analogous to moving along rows in a row-major matrix).
 
 In the original code, I was striding through *alphas* and *probs* in strides of *k*. Thinking of the various matrices as having $K$ rows and being column-major, I was accessing values from adjacent columns on contigous threads when I should have accessed values from adjacent rows.
 
@@ -803,7 +803,7 @@ Next let's consider whether it makes sense to move any data into shared memory, 
 
 * We need to be careful to do the indexing within blocks.
 * We need to transfer any results out of shared memory in order to get it back to the CPU.
-* We don't need the calculations synchronized across threads because each thread owns the calculations for a single location; however in other situations we might need to put a *barrier* in place that ensures all threads are finished with a particular calculation before any proceed to the next steps, using the *__syncthreads()* function.
+* We don't need the calculations synchronized across threads because each thread owns the calculations for a single observation; however in other situations we might need to put a *barrier* in place that ensures all threads are finished with a particular calculation before any proceed to the next steps, using the *__syncthreads()* function.
 * We only have 48Kb of shared memory per block (see the results of *deviceQuery*), so we need to make sure the number of threads per block is not so large as to exceed that. In this case with 192 threads per block and $K=21$ values for each thread, we're over the maximum, so we need to go to 96 threads per block.
 
 Here we notice that *w* and *probs* are accessed in device memory multiple times, and furthermore, *probs* is not even needed as an input, so let's try to manage these values in shared memory, as shown in [compute_probs_unitStrides_sharedMem.cu](https://rawgit.com/berkeley-scf/gpu-workshop-2016/master/example/compute_probs_unitStrides_sharedMem.cu). 

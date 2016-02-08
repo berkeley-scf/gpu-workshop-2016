@@ -891,7 +891,7 @@ CPU calc time: 0.071532s
 
 <h1>7) An extended example of optimizing GPU kernel code</h1>
 
-<p>Here we&#39;ll implement a basic, but real computation that is a component of a larger collaboration I am engaged in. The basic context is understanding spatial variation in the species composition of forests in the eastern United States. The data are multinomial samples of counts of trees of different species at many different spatial locations.  We fit a spatial version of a multicategory probit regression model. </p>
+<p>Here we&#39;ll implement a basic, but real computation that is a component of a larger collaboration I am engaged in. The basic context is understanding spatial variation in the species composition of forests in the eastern United States. The data are multinomial samples of counts of trees of different species at many different spatial locations (i.e., observations).  We fit a spatial version of a multicategory probit regression model. </p>
 
 <p>In our coding, I&#39;ll compare a basic R implementation as well as a C++ implementation with various GPU implementations designed to improve the speed of the GPU calculation. I&#39;ll use R to manage the C++ and CUDA code (via <em>Rcpp</em> and <em>RCUDA</em>) but there&#39;s no reason one couldn&#39;t do this via Python or C/C++ on the front-end. Our main focus will be on the different CUDA implementations.</p>
 
@@ -941,9 +941,9 @@ W_k \sim N(X\beta_k, 1)
 
 <p>The proportion of times the category corresponded to the largest \(W_k\) is an estimate of the multinomial proportions of interest.</p>
 
-<p>For our example, we want to do this computation for large \(M\) (to reduce Monte Carlo error) and for many spatial locations with different \(X\) values. In our code, we will assume that we are given a vector (\(\alpha_i = {\{X_i\beta_k\}}_{k=1,\ldots,K}\)) for each location, \(i\), resulting in an \(n\) by \(K\) matrix.</p>
+<p>For our example, we want to do this computation for large \(M\) (to reduce Monte Carlo error) and for many observations with different \(X\) values. In our code, we will assume that we are given a vector (\(\alpha_i = {\{X_i\beta_k\}}_{k=1,\ldots,K}\)) for each observation, \(i\), resulting in an \(n\) by \(K\) matrix.</p>
 
-<p>Finally, note that I can reuse the random numbers I need across the \(n\) locations (in fact, this probably reducesMonte Carlo error in certain ways), so I just need an \(M\) by \(K\) matrix of standard normal random variables. Even for large \(M\) this is not so big, and I&#39;ll simply generate the values once on the CPU. </p>
+<p>Finally, note that I can reuse the random numbers I need across the \(n\) observations (in fact, this probably reducesMonte Carlo error in certain ways), so I just need an \(M\) by \(K\) matrix of standard normal random variables. Even for large \(M\) this is not so big, and I&#39;ll simply generate the values once on the CPU. </p>
 
 <h3>7.2) R and C baseline implementations</h3>
 
@@ -962,8 +962,8 @@ The C++ version takes about 47 seconds in serial and 6 seconds with eight cores.
 
 <ul>
 <li>It&#39;s generally recommended to have 128-256 threads per block, with the number a multiple of 32 (because threads operate in lock-step in &#39;warps&#39; of 32 threads). So I&#39;m using 192 threads per block.</li>
-<li> I then determine the number of blocks (of 192 threads each) that I need so I can have one thread for each of my \(M\) locations.</li>
-<li>For this algorithm, as mentioned, I can reuse the random numbers across locations, so I don&#39;t generate individually on the GPU.</li>
+<li> I then determine the number of blocks (of 192 threads each) that I need so I can have one thread for each of my \(n\) observations.</li>
+<li>For this algorithm, as mentioned, I can reuse the random numbers across observations, so I don&#39;t generate individually on the GPU.</li>
 <li>I haven&#39;t thought about locality of memory access (i.e., strides, row-major vs. column-major) in this version of the code.</li>
 </ul>
 
@@ -976,7 +976,7 @@ The C++ version takes about 47 seconds in serial and 6 seconds with eight cores.
 
 <h3>7.4) Accessing memory efficiently</h3>
 
-<p>Access to the device memory is slow (memory latency), but GPUs are good at switching between different threads while data is being retrieved from memory. Also, the GPU can access memory from consecutive locations efficiently and <em>coalesce</em> (combine) the memory accesses of groups of threads in a warp. Finally, threads in a warp execute in lock-step. The implications of this is that we want the threads in a warp to retrieve contiguous values from the device memory.  This means using a &#39;stride&#39; of one when incrementing through a vector (analogous to moving along rows in a row-major matrix).</p>
+<p>Access to the device memory is slow (memory latency), but GPUs are good at switching between different threads while data is being retrieved from memory. Also, the GPU can access memory from consecutive memory locations efficiently and <em>coalesce</em> (combine) the memory accesses of groups of threads in a warp. Finally, threads in a warp execute in lock-step. The implications of this is that we want the threads in a warp to retrieve contiguous values from the device memory.  This means using a &#39;stride&#39; of one when incrementing through a vector (analogous to moving along rows in a row-major matrix).</p>
 
 <p>In the original code, I was striding through <em>alphas</em> and <em>probs</em> in strides of <em>k</em>. Thinking of the various matrices as having \(K\) rows and being column-major, I was accessing values from adjacent columns on contigous threads when I should have accessed values from adjacent rows.</p>
 
@@ -996,7 +996,7 @@ R CMD BATCH --no-save /tmp/tmp.R
 <ul>
 <li>We need to be careful to do the indexing within blocks.</li>
 <li>We need to transfer any results out of shared memory in order to get it back to the CPU.</li>
-<li>We don&#39;t need the calculations synchronized across threads because each thread owns the calculations for a single location; however in other situations we might need to put a <em>barrier</em> in place that ensures all threads are finished with a particular calculation before any proceed to the next steps, using the <em>__syncthreads()</em> function.</li>
+<li>We don&#39;t need the calculations synchronized across threads because each thread owns the calculations for a single observation; however in other situations we might need to put a <em>barrier</em> in place that ensures all threads are finished with a particular calculation before any proceed to the next steps, using the <em>__syncthreads()</em> function.</li>
 <li>We only have 48Kb of shared memory per block (see the results of <em>deviceQuery</em>), so we need to make sure the number of threads per block is not so large as to exceed that. In this case with 192 threads per block and \(K=21\) values for each thread, we&#39;re over the maximum, so we need to go to 96 threads per block.</li>
 </ul>
 
