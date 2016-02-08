@@ -776,7 +776,8 @@ Some features of my code:
 Let's execute this:
 
 ```{r example-basic, eval=FALSE, engine='bash'}
-R CMD BATCH --no-save example/example_RCUDA.R
+cd example
+Rscript example_RCUDA.R
 ```
 
 This takes 12.1 seconds. 
@@ -791,8 +792,8 @@ Let's transpose the matrices sent to the GPU memory and access adjacent rows, i.
 
 ```{r example-unitStrides, eval=FALSE, engine='bash'}
 echo "unitStrides <- TRUE" > /tmp/tmp.R
-cat example/example_RCUDA.R >> /tmp/tmp.R
-R CMD BATCH --no-save /tmp/tmp.R
+cat example_RCUDA.R >> /tmp/tmp.R
+Rscript /tmp/tmp.R
 ```
 
 This takes 8.5 seconds, which is a nice speed-up for a simple change, but not earth-shattering.
@@ -811,8 +812,8 @@ Here we notice that *w* and *probs* are accessed in device memory multiple times
 ```{r example-sharedMem, eval=FALSE, engine='bash'}
 echo "unitStrides <- TRUE" > /tmp/tmp.R
 echo "sharedMem <- TRUE" >> /tmp/tmp.R
-cat example/example_RCUDA.R >> /tmp/tmp.R
-R CMD BATCH --no-save /tmp/tmp.R
+cat example_RCUDA.R >> /tmp/tmp.R
+Rscript /tmp/tmp.R
 ```
 
 This takes 1.5 seconds, so we see a big improvement from using shared memory.
@@ -838,8 +839,8 @@ R CMD BATCH --no-save tmp.R
 echo "float <- TRUE" > /tmp/tmp.R
 echo "unitStrides <- TRUE" > /tmp/tmp.R
 echo "sharedMem <- TRUE" >> /tmp/tmp.R
-cat example/example_RCUDA.R >> /tmp/tmp.R
-R CMD BATCH --no-save tmp.R 
+cat example_RCUDA.R >> /tmp/tmp.R
+Rscript /tmp/tmp.R 
 ```
 
 # 7.7) Summary

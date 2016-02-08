@@ -969,7 +969,8 @@ The C++ version takes about 47 seconds in serial and 6 seconds with eight cores.
 
 <p>Let&#39;s execute this:</p>
 
-<pre><code class="bash">R CMD BATCH --no-save example/example_RCUDA.R
+<pre><code class="bash">cd example
+Rscript example_RCUDA.R
 </code></pre>
 
 <p>This takes 12.1 seconds. </p>
@@ -983,8 +984,8 @@ The C++ version takes about 47 seconds in serial and 6 seconds with eight cores.
 <p>Let&#39;s transpose the matrices sent to the GPU memory and access adjacent rows, i.e., strides of one, across contiguous threads, as shown in <a href="https://rawgit.com/berkeley-scf/gpu-workshop-2016/master/example/compute_probs_unitStrides.cu">compute_probs_unitStrides.cu</a>.</p>
 
 <pre><code class="bash">echo &quot;unitStrides &lt;- TRUE&quot; &gt; /tmp/tmp.R
-cat example/example_RCUDA.R &gt;&gt; /tmp/tmp.R
-R CMD BATCH --no-save /tmp/tmp.R
+cat example_RCUDA.R &gt;&gt; /tmp/tmp.R
+Rscript /tmp/tmp.R
 </code></pre>
 
 <p>This takes 8.5 seconds, which is a nice speed-up for a simple change, but not earth-shattering.</p>
@@ -1004,8 +1005,8 @@ R CMD BATCH --no-save /tmp/tmp.R
 
 <pre><code class="bash">echo &quot;unitStrides &lt;- TRUE&quot; &gt; /tmp/tmp.R
 echo &quot;sharedMem &lt;- TRUE&quot; &gt;&gt; /tmp/tmp.R
-cat example/example_RCUDA.R &gt;&gt; /tmp/tmp.R
-R CMD BATCH --no-save /tmp/tmp.R
+cat example_RCUDA.R &gt;&gt; /tmp/tmp.R
+Rscript /tmp/tmp.R
 </code></pre>
 
 <p>This takes 1.5 seconds, so we see a big improvement from using shared memory.</p>
@@ -1028,8 +1029,8 @@ R CMD BATCH --no-save tmp.R
 <pre><code class="bash">echo &quot;float &lt;- TRUE&quot; &gt; /tmp/tmp.R
 echo &quot;unitStrides &lt;- TRUE&quot; &gt; /tmp/tmp.R
 echo &quot;sharedMem &lt;- TRUE&quot; &gt;&gt; /tmp/tmp.R
-cat example/example_RCUDA.R &gt;&gt; /tmp/tmp.R
-R CMD BATCH --no-save tmp.R 
+cat example_RCUDA.R &gt;&gt; /tmp/tmp.R
+Rscript /tmp/tmp.R 
 </code></pre>
 
 <h1>7.7) Summary</h1>
