@@ -80,7 +80,7 @@ end.record() # end timing
 end.synchronize()
 
 gpu_secs = start.time_till(end)*1e-3
-print "Time for calculation (GPU): %fs" % gpu_secs
+print("Time for calculation (GPU): %fs" % gpu_secs)
 
 # Scipy version:
 print("Running Scipy CPU code...")
@@ -90,9 +90,9 @@ end.record() # end timing
 # calculate the run length
 end.synchronize()
 cpu_secs = start.time_till(end)*1e-3
-print "Time for calculation (CPU): %fs" % cpu_secs
+print("Time for calculation (CPU): %fs" % cpu_secs)
 
-print "Output from GPU: %f %f %f" % (out[0], out[1], out[2])
-print "Output from CPU: %f %f %f" % (out2[0], out2[1], out2[2])
+print("Output from GPU: %f %f %f" % (out[0], out[1], out[2]))
+print("Output from CPU: %f %f %f" % (out2[0], out2[1], out2[2]))
 
 
